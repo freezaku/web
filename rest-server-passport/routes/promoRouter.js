@@ -9,16 +9,16 @@ var router = express.Router()
             .use(bodyParser.json());
 
 router.route('/')
-    .get(Verify.verifyOrdinaryUser, function (req, res, next) {
+    .get(function (req, res, next) {
         promo.find({}, function (err, promo) {
-            if (err) throw err;
+            if (err) return next(err);
             res.json(promo);
         });
     })
 
     .post(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function (req, res, next) {
         promo.create(req.body, function (err, promo) {
-            if (err) throw err;
+            if (err) return next(err);
             console.log('Promotion created!');
             var id = promo._id;
 
@@ -31,7 +31,7 @@ router.route('/')
 
     .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function (req, res, next) {
         promo.remove({}, function (err, resp) {
-            if (err) throw err;
+            if (err) return next(err);
             res.json(resp);
         });
     });
@@ -39,7 +39,7 @@ router.route('/')
 router.route('/:promoId')
     .get(Verify.verifyOrdinaryUser, function (req, res, next) {
         promo.findById(req.params.promoId, function (err, promo) {
-            if (err) throw err;
+            if (err) return next(err);
             res.json(promo);
         });
     })
@@ -50,14 +50,14 @@ router.route('/:promoId')
         }, {
             new: true
         }, function (err, promo) {
-            if (err) throw err;
+            if (err) return next(err);
             res.json(promo);
         });
     })
 
     .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function (req, res, next) {
         promo.findByIdAndRemove(req.params.promoId, function (err, resp) {
-            if (err) throw err;
+            if (err) return next(err);
             res.json(resp);
         });
     });

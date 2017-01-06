@@ -37,7 +37,7 @@ exports.verifyOrdinaryUser = function (req, res, next) {
 
 exports.verifyAdmin = function (req, res, next) {
 
-    if (req.decoded._doc.admin == true) {
+    if (req.decoded.admin == true) {
         next();
     } else {
         // if the user is not admin

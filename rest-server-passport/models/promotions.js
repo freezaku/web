@@ -24,7 +24,7 @@ var promotionSchema = new Schema({
     featured: {
         type: Boolean,
         default:false
-    }，
+    },
     price: {
         type: Currency,
         required: true

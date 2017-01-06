@@ -14,28 +14,28 @@ favoriteRouter.route('/')
 
     .get(Verify.verifyOrdinaryUser, function(req,res,next){
 
-        Favorites.findOne({postedBy: req.decoded._doc._id})
+        Favorites.findOne({postedBy: req.decoded._id})
             .populate('postedBy dishes')
             .exec(function (err, favorite) {
-              if (err) throw err;
+              if (err) return next(err);
               res.json(favorite);
             });
     })
 
     .post(Verify.verifyOrdinaryUser, function (req, res, next){
 
-        Favorites.findOne({postedBy: req.decoded._doc._id}, function (err, favorite) {
-          if (err) throw err;
+        Favorites.findOne({postedBy: req.decoded._id}, function (err, favorite) {
+          if (err) return next(err);
           console.log(favorite);
 
           if (favorite == null) {
               var fav = {
                 dishes: req.body._id,
-                postedBy: req.decoded._doc._id
+                postedBy: req.decoded._id
               };
 
               Favorites.create(fav, function (err, favorite) {
-                  if (err) throw err;
+                  if (err) return next(err);
                   console.log('Favorite created!');
                   console.log(favorite);
                   res.json(favorite);
@@ -49,7 +49,7 @@ favoriteRouter.route('/')
 
                 favorite.dishes.push(req.body._id);
                 favorite.save(function (err, favorite) {
-                  if (err) throw err;
+                  if (err) return next(err);
                   console.log('Updated Favorites!');
                   res.json(favorite);
                 })
@@ -60,8 +60,8 @@ favoriteRouter.route('/')
 
     .delete(Verify.verifyOrdinaryUser, function (req, res, next) {
 
-        Favorites.findOneAndRemove({postedBy: req.decoded._doc._id}, function (err, favorite) {
-            if (err) throw err;
+        Favorites.findOneAndRemove({postedBy: req.decoded._id}, function (err, favorite) {
+            if (err) return next(err);
               console.log('Removed Favorites!');
               res.json(favorite);
 
@@ -72,14 +72,14 @@ favoriteRouter.route('/:dishId')
 
     .delete(Verify.verifyOrdinaryUser, function(req, res, next){
 
-        Favorites.findOne({postedBy: req.decoded._doc._id}, function (err, favorite) {
-            if (err) throw err;
+        Favorites.findOne({postedBy: req.decoded._id}, function (err, favorite) {
+            if (err) return next(err);
             var dish = req.params.dishId;
             var index = favorite.dishes.indexOf(dish);
             if (index > -1) {
               favorite.dishes.splice(index, 1);
               favorite.save(function (err, favorite) {
-                if (err) throw err;
+                if (err) return next(err);
                 console.log('Updated Favorites!');
               })
             }

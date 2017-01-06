@@ -20,7 +20,7 @@ var leadershipSchema = new Schema({
     featured: {
         type: Boolean,
         default:false
-    }，
+    },
     abbr: {
         type: String,
         required: true
